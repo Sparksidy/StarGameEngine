@@ -37,7 +37,6 @@ bool InputManager:: IsPressed(Uint8 keyScanCode){
 		return true;
 
 	return false;
-
 }
 
 bool InputManager::IsTriggered(Uint8 keyScanCode){

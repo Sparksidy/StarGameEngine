@@ -6,7 +6,7 @@ class FrameRateController{
 public:
 
 	FrameRateController(unsigned int maxFrameRate_);
-	~FrameRateController();
+	~FrameRateController(){}
 
 	void FrameStart(void);
 	void FrameEnd(void);

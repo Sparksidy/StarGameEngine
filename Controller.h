@@ -14,9 +14,20 @@ Controlling the movement of any GameObject
 #include "Component.h"
 #include "InputManager.h"
 #include <stdio.h>
+#include "EventManager.h"
 
 //class GameObjectInstance;
 extern InputManager* gpInputManager;
+
+class PlayerHitEvent : public Event
+{
+public:
+	PlayerHitEvent() :Event(EVENT_TYPE::PLAYER_HIT)
+	{
+
+	}
+	~PlayerHitEvent(){};
+};
 
 
 class Controller: public Component{
@@ -26,6 +37,7 @@ public:
 	void DoMovement();
 	void Update();
 	void Serialize(FILE** fpp);
+	void HandleEvent(Event* ev);
 
 	~Controller();
 public:

@@ -2,6 +2,7 @@
 #define BODY_H
 #include "Component.h"
 #include "CollisionManager.h"
+#include "EventManager.h"
 
 
 
@@ -19,6 +20,7 @@ public:
 	void Update();
 	void Serialize(FILE **fp);
 	void Integrate(float deltaTime, float gravity);
+	void HandleEvent(Event* ev);
 
 public:
 	float Xpos, Ypos;

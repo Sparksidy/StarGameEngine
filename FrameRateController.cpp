@@ -1,6 +1,7 @@
 #include "FrameRateController.h"
 #include "SDL_timer.h"
 #include "limits.h"
+#include "SDL.h"
 
 FrameRateController::FrameRateController(unsigned int maxFrameRate_){
 	if(0== maxFrameRate)
@@ -19,7 +20,7 @@ void FrameRateController:: FrameStart(void){
 
 }
 void FrameRateController:: FrameEnd(void){
-
+	mTickEnd = SDL_GetTicks() - mTickStart;
 	while(SDL_GetTicks() - mTickStart < mMaxTicksPerFrame){
 		mTickEnd = SDL_GetTicks() - mTickStart;
 	}
@@ -27,5 +28,5 @@ void FrameRateController:: FrameEnd(void){
 }
 unsigned int FrameRateController:: GetFrameTime(void){
 
-	return mTickStart-mTickEnd;
+	return mTickEnd;
 }

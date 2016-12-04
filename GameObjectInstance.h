@@ -10,6 +10,7 @@
 #include "Sprite.h"
 #include "Controller.h"
 #include "Body.h"
+#include "EventManager.h"
 #include <vector>
 
 class Component;
@@ -28,7 +29,7 @@ public:
 
 	Component* GetComponent(unsigned int mType);
 	void AddComponent(unsigned int mType);
-
+	void HandleEvent(Event* ev);
 	
 
 public:

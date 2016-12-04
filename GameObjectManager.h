@@ -13,8 +13,9 @@ public:
 	{
 
 	}
-	void LoadObject(char* filePath);
+	GameObjectInstance* LoadObject(char* filePath);
 	void LoadLevel(char* Levelpath);
+	
 	
 public:
 	

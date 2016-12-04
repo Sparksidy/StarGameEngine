@@ -36,3 +36,11 @@ void GameObjectInstance::AddComponent(unsigned int mType)
 	mComponents.push_back(newComponent);
 
 }
+
+void GameObjectInstance::HandleEvent(Event* ev)
+{
+	for (auto i : mComponents)
+	{
+		i->HandleEvent(ev);
+	}
+}

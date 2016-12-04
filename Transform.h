@@ -2,11 +2,16 @@
 #define TRANSFORM_H
 
 #include "Vector2D.h"
-//#include "Matrix2D.h"
+#include "Matrix2D.h"
 #include "Component.h"
 #include "GameObjectInstance.h"
-
+#include "EventManager.h"
 #include <stdio.h>
+
+#include <glm/glm/glm.hpp>
+#include <glm/glm/gtc/matrix_transform.hpp>
+#include <glm/glm/gtc/type_ptr.hpp>
+
 
 class GameObjectInstance;
 
@@ -17,32 +22,32 @@ public:
 		
 		mPosition.x = 0;
 		mPosition.y = 0;
-		mScaleX = 0;
-		mScaleY = 0;
-		mAngle = 0;
 
-		//Matrix2DIdentity(mpTransform);
+		mScaleX = 1.0f;
+		mScaleY = 1.0f;
 
+		mAngle = 0.0f;
+
+		//Matrix2DIdentity(&mpTransform);
+		
 	
 	}
 	
-	void Update(){}
+	void Update();
 
 	void Serialize(FILE** fpp);
+	void HandleEvent(Event* ev);
+
 
 	~Transform(){}
 
-	
-
-
-	
 
 public:
 	Vector2D mPosition;
-	unsigned int mScaleX, mScaleY;
+	float mScaleX, mScaleY;
 	float mAngle;
 
-	//Matrix2D* mpTransform;
+	glm::mat4 mpTransform;
 
 
 

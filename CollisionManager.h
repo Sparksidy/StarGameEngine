@@ -16,8 +16,6 @@ public:
 
 		NUM,
 	};
-
-	
 	//Shape(){}
 	Shape(Type type) 
 	{

@@ -4,7 +4,8 @@
 #include "CollisionManager.h"
 
 extern CollisionManager* gpCollisionManager;
-//extern GameObjectManager* gOM;
+extern EventManager* gpEventManager;
+
 
 PhysicsManager::PhysicsManager()
 {
@@ -39,21 +40,34 @@ void PhysicsManager::Integrate(float deltaTime, float gravity, GameObjectManager
 	{
 		Body* pBody1 = (Body *)pTrGameObjManager->mGameObjects[i]->GetComponent(COMPONENT_BODY);
 
+
+		if (pBody1 == NULL)
+			continue;
+
 		for (unsigned int j = i + 1; j < objectNum; j++)
 		{
 			Body* pBody2 = (Body *)pTrGameObjManager->mGameObjects[j]->GetComponent(COMPONENT_BODY);
 
-			if (pBody1 == NULL)
-				continue;
 
 			if (pBody2 == NULL)
 				continue;
 
 			gpCollisionManager->CheckCollisionAndGenerateContacts(pBody1->mShape, pBody1->Xpos, pBody1->Ypos, pBody2->mShape, pBody2->Xpos, pBody2->Ypos);
-			printf("Position: %f %f", pBody1->Xpos, pBody2->Xpos);
-
+			
 
 		}
+	}
+
+	//Handle the Events
+	for (auto contact : gpCollisionManager->mContacts)
+	{
+		CollideEvent cEvent;
+		cEvent.pObj1 = contact->mBodies[0]->mpOwner;
+		cEvent.pObj2 = contact->mBodies[1]->mpOwner;
+
+		cEvent.pObj1->HandleEvent(&cEvent);
+		cEvent.pObj2->HandleEvent(&cEvent);
+
 	}
 	
 

@@ -1,8 +1,6 @@
 Player
-file.txt
-Enemy
-file2.txt
-
-
-
-
+playerShip.txt
+0 0
+Bullet
+Bullet.txt
+100 100

@@ -3,7 +3,7 @@
 #include "Controller.h"
 #include "Body.h"
 
-void GameObjectManager::LoadObject(char* filePath)
+GameObjectInstance* GameObjectManager::LoadObject(char* filePath)
 {
 	
 	GameObjectInstance* pInst = new GameObjectInstance();
@@ -30,11 +30,15 @@ void GameObjectManager::LoadObject(char* filePath)
 				}
 				if (0 == strcmp("Sprite", stringName))
 				{
-					
+					char verticesName[256];
 					pInst->AddComponent(COMPONENT_SPRITE);
 					Sprite* pSp = (Sprite *)pInst->GetComponent(COMPONENT_SPRITE);
 					pSp->mpOwner = pInst;
-					pSp->Serialize(&fp);
+
+					fscanf(fp, "%s", verticesName);
+					printf("String: %s \n", verticesName);
+					pSp->SerializeVertices(verticesName);
+					//pSp->Serialize(&fp);
 
 				}
 				if (0 == strcmp("Controller", stringName))
@@ -59,16 +63,19 @@ void GameObjectManager::LoadObject(char* filePath)
 
 	}
 
-		
-	
-
 	mGameObjects.push_back(pInst);
+
+	return pInst;
 
 
 }
 
+
+
 void GameObjectManager::LoadLevel(char* levelPath)
 {
+	GameObjectInstance* pInst = new GameObjectInstance();
+
 	FILE* levelP;
 	levelP = fopen(levelPath, "r");
 
@@ -79,20 +86,35 @@ void GameObjectManager::LoadLevel(char* levelPath)
 	{
 		if (0 == strcmp("Player", stringName))
 		{
+			
 			fscanf(levelP, "%s", stringName);
-			LoadObject(stringName);
-
+			pInst = LoadObject(stringName);
+			Transform* pTr = (Transform *)pInst->GetComponent(COMPONENT_TRANSFORM);
+			Sprite* pSp = (Sprite *)pInst->GetComponent(COMPONENT_SPRITE);
+			pSp->mType = SHIP;
+			fscanf(levelP, "%f %f\n", &pTr->mPosition.x, &pTr->mPosition.y);
+			printf("%f %f\n", pTr->mPosition.x, pTr->mPosition.y);
+				
 		}
-		if (0 == strcmp("Enemy", stringName))
+		if (0 == strcmp("Bullet", stringName))
 		{
 			fscanf(levelP, "%s", stringName);
-			LoadObject(stringName);
+			pInst = LoadObject(stringName);
+			Transform* pTr = (Transform *)pInst->GetComponent(COMPONENT_TRANSFORM);
+			Sprite* pSp = (Sprite *)pInst->GetComponent(COMPONENT_SPRITE);
+			pSp->mType = BULLET;
+			fscanf(levelP, "%f %f\n", &pTr->mPosition.x, &pTr->mPosition.y);
+			printf("%f %f\n", pTr->mPosition.x, pTr->mPosition.y);
 
 		}
 
 	}
 
+	
+
+
 
 }
+
 
 

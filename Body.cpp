@@ -95,13 +95,23 @@ void Body::Integrate(float deltaTime, float gravity)
 	prevYpos = Ypos;
 
 	//Calculate acceleration
-	mTotalForceY += gravity;
-	AccX = mTotalForceX * mInverseMass;
-	AccY = mTotalForceY * mInverseMass;
+	//mTotalForceY += gravity;
+	//AccX = mTotalForceX * mInverseMass;
+	//AccY = mTotalForceY * mInverseMass;
+
+	AccX *= 0.8f;
+	AccY *= 0.8f;
+
 
 	//Calculate velocity
 	VelX = AccX*deltaTime + VelX;
 	VelY = AccY*deltaTime + VelY;
+
+	VelX *= 0.98f;
+	VelY *= 0.98f;
+
+
+	
 
 	//Calculate position
 	Xpos = VelX*deltaTime + Xpos;
@@ -122,5 +132,10 @@ void Body::Integrate(float deltaTime, float gravity)
 			pTr->mPosition.y = Ypos;
 		}
 	}
+
+}
+
+void Body::HandleEvent(Event* ev)
+{
 
 }

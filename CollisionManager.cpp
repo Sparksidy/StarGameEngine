@@ -40,7 +40,7 @@ void CollisionManager::ResetContacts()
 
 bool CollisionManager::CheckCollisionAndGenerateContacts(Shape* shape1, float xPos1, float yPos1, Shape* shape2, float xPos2, float yPos2)
 {
-	printf("Here in the function pointer\n");
+	
 	//Function Pointer
 	return mCollisionTable[(int)shape1->mType][(int)shape2->mType](shape1, xPos1, yPos1, shape2, xPos2, yPos2, mContacts);
 }
@@ -53,28 +53,46 @@ Checks collision between a Circle and a Circle
 */
 bool CheckCollisionCircleCircle(Shape* shape1, float xPos1, float yPos1, Shape* shape2, float xPos2, float yPos2, std::list<Contact*> &mContacts)
 {
-	printf("Here in Circle \n");
+	ShapeCircle* pCirc1 = (ShapeCircle *)shape1;
+	ShapeCircle* pCirc2 = (ShapeCircle *)shape2;
+
+	bool CollisionResult;
 
 	//Check for Circle to Circle Collision here
 
+	float distance, radius;
+
+	distance = sqrt(abs(pow((xPos1 - xPos2), 2) + pow((yPos1 - yPos2), 2) ));
+
+	radius = pCirc1->radius + pCirc2->radius;
+
+	//printf("Distance: %f, Radius: %f\n", distance, radius);
+
+	if (distance <= radius)
+		CollisionResult = true;
+	else
+		CollisionResult = false;
+
+
 	
 		//If Collision,
+	if (CollisionResult)
+	{
+		//Create Contact
+		Contact* pC = new Contact();
 
-			//Create Contact
-			Contact* pC = new Contact();
+		//Save the Body Owner
+		pC->mBodies[0] = shape1->mBodyOwner;
+		pC->mBodies[1] = shape2->mBodyOwner;
 
-			//Save the Body Owner
-			pC->mBodies[0] = shape1->mBodyOwner;
-			pC->mBodies[1] = shape2->mBodyOwner;
+		//Add it to the list of Contacts
+		mContacts.push_back(pC);
 
-			//Add it to the list of Contacts
-			mContacts.push_back(pC);
 
-			return false;
+	}
+
+		return CollisionResult;
 			
-	
-	
-	
 
 }
 
@@ -86,22 +104,10 @@ Checks collision between a Circle and a Rectangles
 */
 bool CheckCollisionCircleRectangle(Shape* shape1, float xPos1, float yPos1, Shape* shape2, float xPos2, float yPos2, std::list<Contact*> &mContacts)
 {
-
 	//Check Collision Here
+	bool CollisionResult = CheckCollisionRectangleCircle(shape2, xPos2, yPos2, shape1, xPos1, yPos1, mContacts);
 
-	//If Collision,
-
-	//Create Contact
-	Contact* pC = new Contact();
-
-	//Save the Body Owner
-	pC->mBodies[0] = shape1->mBodyOwner;
-	pC->mBodies[1] = shape2->mBodyOwner;
-
-	//Add it to the list of Contacts
-	mContacts.push_back(pC);
-
-	return false;
+	return CollisionResult;
 
 }
 //-------------------------------------------------------------------------------------------------------------------------
@@ -110,23 +116,64 @@ Checks collision between a Rectangle and a Circel
 */
 bool CheckCollisionRectangleCircle(Shape* shape1, float xPos1, float yPos1, Shape* shape2, float xPos2, float yPos2, std::list<Contact*> &mContacts)
 {
+	bool CollisionResult;
+
 	//Check Collision Here
+	ShapeRectangle* pRect = (ShapeRectangle *)shape1;
+	ShapeCircle* pCirc = (ShapeCircle *)shape2;
 
 
+	float left, top, bottom, right;
+
+	left = xPos1 -  (pRect->width / 2);
+	right = xPos1 + (pRect->width / 2);
+	bottom = yPos1 -(pRect->height /2);
+	top = yPos1 + (pRect->height/ 2);
+
+	if (xPos2 > right) {
+		xPos2 = right;
+	}
+	else if (xPos2 < left) {
+		xPos2 = left;
+	}
+
+	if (yPos2 > top) {
+		yPos2 = top;
+	}
+	else if (yPos2 < bottom) {
+		yPos2 = bottom;
+	}
+
+
+	/*float squaredDistance;
+	squaredDistance = Vector2DSquareDistance(&point, &circleCenter);*/
+
+	float distance = abs(pow((xPos1 - xPos2), 2) + pow((yPos1 - yPos2), 2));
+	float radius = pow(pCirc->radius, 2.0f);
+
+	if (distance < (radius))
+		CollisionResult = true;
+	else
+		CollisionResult = false;
 
 	//If Collision,
 
-	//Create Contact
-	Contact* pC = new Contact();
+	if (CollisionResult)
+	{
+		//Create Contact
+		Contact* pC = new Contact();
 
-	//Save the Body Owner
-	pC->mBodies[0] = shape1->mBodyOwner;
-	pC->mBodies[1] = shape2->mBodyOwner;
+		//Save the Body Owner
+		pC->mBodies[0] = shape1->mBodyOwner;
+		pC->mBodies[1] = shape2->mBodyOwner;
 
-	//Add it to the list of Contacts
-	mContacts.push_back(pC);
+		//Add it to the list of Contacts
+		mContacts.push_back(pC);
+	}
 
-	return false;
+	
+
+	return CollisionResult;
 
 }
 
@@ -172,7 +219,7 @@ bool CheckCollisionRectangleRectangle(Shape* shape1, float xPos1, float yPos1, S
 
 	if (CollisionResult)
 	{
-		printf("Here in Collision Rectangle \n");
+		
 		//Create Contact
 		Contact* pC = new Contact();
 
